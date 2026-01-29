@@ -5,6 +5,6 @@ export default defineConfig({
   out: "src/lib/db/migrations",
   dialect: "postgresql",
   dbCredentials: {
-    url: "your_connection_string",
+    url: "postgres://nataliemoore@localhost:5432/gator",
   },
 });
