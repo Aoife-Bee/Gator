@@ -25,10 +25,19 @@ export async function handlerAddFeed(cmdName: string, ...args: string[]) {
 
 export async function handlerFeeds(cmdName: string) {
     const feeds = await getFeeds();
+    if (feeds.length === 0) {
+        console.log(`No Feeds Found.`);
+        return;
+    }
+
     for (const feed of feeds) {
         console.log(`* ${feed.name}`);
         console.log(`* ${feed.url}`);
         const user = await getUserFromUserId(feed.userId);
+        if (!user) {
+            console.log(`Missing user for feed: ${feed.id}`);
+            continue;
+        }
         console.log(`* ${user.name}`);
     }
 }
