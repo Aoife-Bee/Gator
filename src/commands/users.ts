@@ -28,13 +28,8 @@ export async function handlerRegister(cmdName: string, ...args:string[]) {
     } else {
         throw new Error("Username already exists.");
     }
-    
 }
 
-export async function handlerReset(cmdName: string) {
-    await deleteAllUsers();
-    console.log(`Deleted all user data.`);
-}
 
 export async function handlerUsers(cmdName: string) {
     const users = await getUsers();
