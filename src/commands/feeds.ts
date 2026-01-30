@@ -1,6 +1,6 @@
 import { readConfig } from "src/config";
-import { createFeed } from "src/lib/db/queries/feeds";
-import { getUser } from "src/lib/db/queries/users";
+import { createFeed, getFeeds } from "src/lib/db/queries/feeds";
+import { getUser, getUserFromUserId } from "src/lib/db/queries/users";
 import { Feed, User } from "src/lib/db/schema.js";
 
 export async function handlerAddFeed(cmdName: string, ...args: string[]) {
@@ -21,6 +21,16 @@ export async function handlerAddFeed(cmdName: string, ...args: string[]) {
         throw new Error("Failed to create feed");
     }
     console.log("Feed created successfully");
+}
+
+export async function handlerFeeds(cmdName: string) {
+    const feeds = await getFeeds();
+    for (const feed of feeds) {
+        console.log(`* ${feed.name}`);
+        console.log(`* ${feed.url}`);
+        const user = await getUserFromUserId(feed.userId);
+        console.log(`* ${user.name}`);
+    }
 }
 
 

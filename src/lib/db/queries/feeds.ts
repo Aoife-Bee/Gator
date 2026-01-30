@@ -16,3 +16,8 @@ export async function createFeed(
 
     return firstOrUndefined(result);
 }
+
+export async function getFeeds() {
+    const result = await db.select().from(feeds);
+    return result;
+}
