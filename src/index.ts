@@ -3,6 +3,7 @@ import { handlerLogin, handlerRegister, handlerUsers } from "./commands/users.js
 import { handlerReset } from "./commands/reset.js";
 import { handlerAgg } from "./commands/aggregate.js";
 import { handlerAddFeed, handlerFeeds } from "./commands/feeds.js";
+import { handlerFollow, handlerFollowing } from "./commands/follow.js";
 
 
 async function main() {
@@ -22,6 +23,8 @@ async function main() {
   registerCommand(cmdRegistry, "agg", handlerAgg);
   registerCommand(cmdRegistry, "addfeed", handlerAddFeed);
   registerCommand(cmdRegistry, "feeds", handlerFeeds);
+  registerCommand(cmdRegistry, "follow", handlerFollow);
+  registerCommand(cmdRegistry, "following", handlerFollowing);
   
   try {
     await runCommand(cmdRegistry, cmdName, ...cmdArgs);
