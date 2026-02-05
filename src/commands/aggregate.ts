@@ -1,6 +1,7 @@
-import { time } from "node:console";
 import { markFeedFetched, getNextFeedToFetch } from "src/lib/db/queries/feeds";
 import { fetchFeed } from "src/lib/rss";
+import { Feed, NewPost } from "src/lib/db/schema";
+import { createPost } from "src/lib/db/queries/posts";
 
 export async function handlerAgg(cmdName: string, ...args: string[]) {
     if (args.length !== 1) {
@@ -30,16 +31,35 @@ export async function handlerAgg(cmdName: string, ...args: string[]) {
 }
 
 
-export async function scrapeFeeds() {
-    const nextFeed = await getNextFeedToFetch();
-    if (!nextFeed) {
-        console.log("No feeds to fetch.");
-        return
+async function scrapeFeeds() {
+    const feed = await getNextFeedToFetch();
+    if (!feed) {
+        console.log(`No feeds to fetch.`);
+        return;
     }
-    await markFeedFetched(nextFeed.id);
-    const feedData = await fetchFeed(nextFeed.url);
-    for (const item of feedData.channel.item) {
-        console.log(`* ${item.title}`);
+    console.log(`Found a feed to fetch!`);
+    scrapeFeed(feed);
+}
+
+async function scrapeFeed(feed: Feed) {
+    await markFeedFetched(feed.id);
+
+    const feedData = await fetchFeed(feed.url);
+
+    for (let item of feedData.channel.item) {
+        console.log(`Found post: %s`, item.title);
+
+        const now = new Date();
+
+        await createPost({
+            url: item.link,
+            feedId: feed.id,
+            title: item.title,
+            createdAt: now,
+            updatedAt: now,
+            description: item.description,
+            publishedAt: new Date(item.pubDate),
+        } satisfies NewPost);
     }
 }
 
