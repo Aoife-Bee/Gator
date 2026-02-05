@@ -5,6 +5,7 @@ import { handlerReset } from "./commands/reset.js";
 import { handlerAgg } from "./commands/aggregate.js";
 import { handlerAddFeed, handlerFeeds } from "./commands/feeds.js";
 import { handlerFollow, handlerFollowing } from "./commands/follow.js";
+import { handlerUnfollow } from "./commands/unfollow.js";
 
 
 async function main() {
@@ -26,6 +27,7 @@ async function main() {
   registerCommand(cmdRegistry, "feeds", handlerFeeds);
   registerCommand(cmdRegistry, "follow", middlewareLoggedIn(handlerFollow));
   registerCommand(cmdRegistry, "following", middlewareLoggedIn(handlerFollowing));
+  registerCommand(cmdRegistry, "unfollow", middlewareLoggedIn(handlerUnfollow));
   
   try {
     await runCommand(cmdRegistry, cmdName, ...cmdArgs);
